@@ -14,28 +14,28 @@ public class TaskServices {
 		List<Task> taskModels = new ArrayList<>();
 		taskRepository.findAll().forEach(taskModels::add);
 		return taskModels;
-		
 	}
 	
-	public Task getTask(String taskHolderName) {
-		return taskRepository.findByTaskHolderName(taskHolderName);
+	public Task getTask(String taskId) {
+		return taskRepository.findById(taskId).orElse(null);
 	}
 
 	public void addTask(Task task) {
 		taskRepository.save(task);
 	}
 
-	
+	public Task updateTaskStatus(String id, String taskStatus) {
+		Optional<Task> taskOptional = taskRepository.findById(id);
+		if (taskOptional.isPresent()) {
+			Task task = taskOptional.get();
+			task.setTaskStatus(taskStatus);
+			taskRepository.save(task);
+			return task;
+		}
+		return null; // Or throw an exception if you want to handle this case differently
+	}
 
-    public Task updateTaskStatus(String id,String taskStatus){
-        Task t = taskRepository.findByTaskId(id);
-        t.setTaskStatus(taskStatus);
-        return t;
-    }
-
-	public void deleteCourse(String id) {
+	public void deleteTask(String id) {
 		taskRepository.deleteById(id);
 	}
 }
-
-
